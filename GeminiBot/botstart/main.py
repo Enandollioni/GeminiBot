@@ -2,7 +2,7 @@ import telebot
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
-import handlers.message_handlers as message_handlers
+import handlers.message_handlers as msg_handlers
 
 
 def start():
@@ -10,13 +10,13 @@ def start():
 
 
 load_dotenv()
-Token = str(os.getenv('TOKEN'))
+Token = str(os.getenv('TOKEN'))  # Токен телеграм бота
 bot = telebot.TeleBot(Token, parse_mode=None)
 
-api_key = os.getenv("GEMINI_API_KEY")
+api_key = os.getenv("GEMINI_API_KEY")  # API ключ от нейросети
 genai.configure(api_key=api_key)
 
-# Set up the model
+# Настройка модели
 generation_config = {
     "temperature": 0.9,
     "top_p": 1,
@@ -47,9 +47,7 @@ model = genai.GenerativeModel(model_name="gemini-1.0-pro",
                               generation_config=generation_config,
                               safety_settings=safety_settings)
 
-convo = model.start_chat(history=[
-])
-message_handlers.register_handlers(bot, convo)
-
-start()
+convo = model.start_chat(history=[])
+msg_handlers.register_handlers(bot, convo)  # регистрация хендлеров
+start()  # пуллинг бота
 
